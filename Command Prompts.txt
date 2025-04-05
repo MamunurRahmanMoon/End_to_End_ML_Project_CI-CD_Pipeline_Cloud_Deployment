@@ -2,3 +2,5 @@ conda create -p venv python==3.8 -y
 
 pip install -r requirements
 
+conda install -p venv/ ipykernel --update-deps --force-reinstall
+
