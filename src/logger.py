@@ -20,10 +20,6 @@ logging.basicConfig(
 if __name__ == "__main__":
     try:
         logging.info("Logging is set up.")
-        logging.info("This is an info message.")
-        logging.warning("This is a warning message.")
-        logging.error("This is an error message.")
-        logging.critical("This is a critical message.")
         # Example of an exception
         1 / 0
     except Exception as e:

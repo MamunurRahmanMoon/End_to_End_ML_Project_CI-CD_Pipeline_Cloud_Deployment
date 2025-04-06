@@ -84,3 +84,6 @@ venv.bak/
 *.key
 *.crt
 *.pem
+
+# Datasets
+/artifacts
