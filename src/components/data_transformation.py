@@ -64,45 +64,49 @@ class DataTransformation:
 
 
         
-    def initiate_data_transformation(self, train_path, test_path) :
-
-
+    def initiate_data_transformation(self, train_path, val_path, test_path):
         try:
             logging.info("Data Transformation started")
+            
+            # Read the datasets
             train_df = pd.read_csv(train_path)
+            val_df = pd.read_csv(val_path)
             test_df = pd.read_csv(test_path)
 
-            logging.info("Read train and test data completed")
-
+            logging.info("Read train, validation, and test data completed")
 
             logging.info("Obtaining preprocessing object")
             preprocessing_obj = self.get_data_transformer_object()
 
-            # Defining target and input features
+            # Define target and input features
             target_column_name = 'math_score'
             numerical_columns = ['writing_score', 'reading_score']
 
-            # Creating dataframe for Training input features and target feature
+            # Training data
             input_feature_train_df = train_df.drop(columns=[target_column_name], axis=1)
             target_feature_train_df = train_df[target_column_name]
 
-            # Creating dataframe for Testing input features and target feature
+            # Validation data
+            input_feature_val_df = val_df.drop(columns=[target_column_name], axis=1)
+            target_feature_val_df = val_df[target_column_name]
+
+            # Testing data
             input_feature_test_df = test_df.drop(columns=[target_column_name], axis=1)
-            target_feature_test_df = test_df[target_column_name]    
-            
-            # Applying preprocessing object on training and testing dataframes
-            logging.info("Applying preprocessing object on training and testing dataframes")
-            
+            target_feature_test_df = test_df[target_column_name]
+
+            # Apply preprocessing
+            logging.info("Applying preprocessing object on training, validation, and testing dataframes")
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
+            input_feature_val_arr = preprocessing_obj.transform(input_feature_val_df)
             input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)
-    
-            # 
+
+            # Combine input and target features
             train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
+            val_arr = np.c_[input_feature_val_arr, np.array(target_feature_val_df)]
             test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
 
-            # Saving the preprocessor object
+            # Save the preprocessing object
             logging.info("Saving preprocessing object")
-
             save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
@@ -110,10 +114,11 @@ class DataTransformation:
 
             return (
                 train_arr,
+                val_arr,
                 test_arr,
                 self.data_transformation_config.preprocessor_obj_file_path
             )
 
         except Exception as e:
+            logging.error("Error occurred during data transformation")
             raise CustomException(e, sys)
-            logging.info("Error occurred during data transformation")

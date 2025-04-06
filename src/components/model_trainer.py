@@ -28,15 +28,16 @@ class ModelTrainer:
         self.model_trainer_config = ModelTrainerConfig()
 
 
-    def initiate_model_trainer(self, train_array, test_array):
+    def initiate_model_trainer(self, train_array, val_array, test_array):
         try:
-            logging.info("Split training and test input data")
-            X_train, y_train, X_test, y_test=(
-                train_array[:,:-1],
-                train_array[:,-1],
-                test_array[:,:-1],
-                test_array[:,-1]
-            )
+            logging.info("Splitting input and target features for training, validation, and testing")
+            
+            # Split arrays into input and target features
+            X_train, y_train = train_array[:, :-1], train_array[:, -1]
+            X_val, y_val = val_array[:, :-1], val_array[:, -1]
+            X_test, y_test = test_array[:, :-1], test_array[:, -1]
+
+            # Define models
             models = {
                 "Random Forest": RandomForestRegressor(),
                 "Decision Tree": DecisionTreeRegressor(),
@@ -48,38 +49,34 @@ class ModelTrainer:
                 "AdaBoost Classifier": AdaBoostRegressor(),
             }
 
-            model_report : dict = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models)
+            # Evaluate models on training and validation sets
+            model_report = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_val, y_test=y_val, models=models)
             
-            ## Get the best model *SCORE* from the model report dict
+            # Get the best model score and name
             best_model_score = max(sorted(model_report.values()))
-
-            
-            # Get the best model *NAME* from the model report dict
-            best_model_name = list(model_report.keys())[
-                list(model_report.values()).index(best_model_score)
-            ]
-
+            best_model_name = list(model_report.keys())[list(model_report.values()).index(best_model_score)]
             best_model = models[best_model_name]
 
-            # Model with *R^2 Score* less than 70% is not saved
-            if best_model_score<0.7:
-                raise CustomException("No best model found")
+            # Check if the best model meets the threshold
+            if best_model_score < 0.7:
+                raise CustomException("No best model found with acceptable performance")
             
-            # Else, save the best model
-            logging.info(f"Best found model on both training and testing dataset")
+            logging.info(f"Best model selected: {best_model_name} with validation R² score: {best_model_score}")
 
-            # Saving the best model
+            # Save the best model
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
                 obj=best_model
             )
 
+            # Test the best model on the test set
+            logging.info("Testing the best model on the test set")
             predicted = best_model.predict(X_test)
-
             r2_square = r2_score(y_test, predicted)
-            return r2_square
-            
-        
+
+            logging.info(f"Test R² score for the best model: {r2_square}")
+            return best_model_name, r2_square  # Return the best model name and test R² score
+
         except Exception as e:
-            logging.info("Exception occured at model trainer")
-            raise CustomException(e,sys) from e 
+            logging.error("Exception occurred in model trainer")
+            raise CustomException(e, sys)
