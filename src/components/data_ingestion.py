@@ -1,30 +1,32 @@
 import os
 import sys
 from src.exception import CustomException
+from src.components.data_transformation import DataTransformation, DataTransformationConfig
 from src.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
 
+@dataclass
 class DataIngestionConfig:
     """
     Data Ingestion configuration class to define the paths and parameters for data ingestion.
     """
-    raw_data_dir = os.path.join('artifacts')  # Directory for raw data
-    raw_data_path = os.path.join(raw_data_dir, 'data.csv')  # Full path to the raw data file
-    train_data_path = os.path.join('artifacts', 'train.csv')
-    test_data_path = os.path.join('artifacts', 'test.csv')
+    raw_data_dir: str = os.path.join('artifacts')  # Directory for raw data
+    raw_data_path: str = os.path.join(raw_data_dir, 'data.csv')  # Full path to the raw data file
+    train_data_path: str = os.path.join('artifacts', 'train.csv')
+    test_data_path: str = os.path.join('artifacts', 'test.csv')
 
+@dataclass
 class DataIngestion:
-    def __init__(self):
-        self.ingestion_config = DataIngestionConfig()
+    ingestion_config: DataIngestionConfig = DataIngestionConfig()
 
     def initiate_data_ingestion(self):
         logging.info("Data Ingestion started")
         try:
             # Read the dataset from a CSV file
-            df = pd.read_csv("notebook/data/stud.csv")
+            df = pd.read_csv("notebooks/data/stud.csv")
             logging.info("Read the dataset as dataframe")
 
             # Make directories for the output files if they do not exist
@@ -44,7 +46,6 @@ class DataIngestion:
             test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
             logging.info("Train and test data saved to CSV files")
 
-            logging.info("Data Ingestion completed")
             return (
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path,
@@ -56,5 +57,9 @@ class DataIngestion:
 
 if __name__ == "__main__":
     data_ingestion = DataIngestion()
-    data_ingestion.initiate_data_ingestion()
+    train_data, test_data = data_ingestion.initiate_data_ingestion()
     logging.info("Data Ingestion completed")
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data, test_data)
+    logging.info("Data Transformation completed")
