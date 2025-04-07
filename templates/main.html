@@ -87,6 +87,7 @@
     <div class="container">
         <h1>Student Exam Performance Prediction</h1>
         <form action="{{ url_for('predict_datapoint') }}" method="post">
+            <!-- Gender -->
             <div class="mb-3">
                 <label class="form-label">Gender</label>
                 <select class="form-control" name="gender" required>
@@ -95,6 +96,8 @@
                     <option value="female">Female</option>
                 </select>
             </div>
+
+            <!-- Race/Ethnicity -->
             <div class="mb-3">
                 <label class="form-label">Race or Ethnicity</label>
                 <select class="form-control" name="ethnicity" required>
@@ -106,6 +109,8 @@
                     <option value="group E">Group E</option>
                 </select>
             </div>
+
+            <!-- Parental Level of Education -->
             <div class="mb-3">
                 <label class="form-label">Parental Level of Education</label>
                 <select class="form-control" name="parental_level_of_education" required>
@@ -118,6 +123,8 @@
                     <option value="some high school">Some High School</option>
                 </select>
             </div>
+
+            <!-- Lunch Type -->
             <div class="mb-3">
                 <label class="form-label">Lunch Type</label>
                 <select class="form-control" name="lunch" required>
@@ -126,6 +133,8 @@
                     <option value="standard">Standard</option>
                 </select>
             </div>
+
+            <!-- Test Preparation Course -->
             <div class="mb-3">
                 <label class="form-label">Test Preparation Course</label>
                 <select class="form-control" name="test_preparation_course" required>
@@ -134,16 +143,22 @@
                     <option value="completed">Completed</option>
                 </select>
             </div>
+
+            <!-- Study Hours -->
             <div class="mb-3">
                 <label class="form-label">Writing Score (out of 100)</label>
                 <input class="form-control" type="number" name="writing_score" placeholder="Enter your Writing Score"
                     min="0" max="100" required />
             </div>
+
+            <!-- Reading Score (out of 100) -->
             <div class="mb-3">
                 <label class="form-label">Reading Score (out of 100)</label>
                 <input class="form-control" type="number" name="reading_score" placeholder="Enter your Reading Score"
                     min="0" max="100" required />
             </div>
+
+            <!-- Math Score (out of 100) -->
             <div class="mb-3">
                 <input class="btn btn-primary" type="submit" value="Predict your Math Score" />
             </div>
