@@ -86,4 +86,4 @@ venv.bak/
 *.pem
 
 # Datasets
-/artifacts
+
