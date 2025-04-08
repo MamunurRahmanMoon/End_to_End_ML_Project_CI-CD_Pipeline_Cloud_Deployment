@@ -1,0 +1,9 @@
+1. To create an elasticbeanstalk environment succesfully:
+
+       - https://stackoverflow.com/a/76620598  (*MUST Follow*)
+
+       - Other doc >>
+            https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.environments.html#:~:text=To%20launch%20an%20environment%20with,an%20environment's%20tier%20after%20creation.
+
+
+2. 

@@ -1,29 +1,36 @@
 import os
 import sys
 from src.exception import CustomException
-from src.components.data_transformation import DataTransformation, DataTransformationConfig
-from src.components.model_trainer import ModelTrainer, ModelTrainerConfig
+from src.components.data_transformation import (
+    DataTransformation,
+    DataTransformationConfig,
+)
+from src.components.model_trainer import ModelTrainer
 from src.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from dataclasses import dataclass
 
 
-@dataclass
 class DataIngestionConfig:
     """
     Data Ingestion configuration class to define the paths and parameters for data ingestion.
     """
-    raw_data_dir: str = os.path.join('artifacts')  # Directory for raw data
-    raw_data_path: str = os.path.join(raw_data_dir, 'data.csv')  # Full path to the raw data file
-    train_data_path: str = os.path.join('artifacts', 'train.csv')
-    val_data_path: str = os.path.join('artifacts', 'val.csv')  # Path for validation data
-    test_data_path: str = os.path.join('artifacts', 'test.csv')
+
+    def __init__(self):
+        self.raw_data_dir = os.path.join("artifacts")  # Directory for raw data
+        self.raw_data_path = os.path.join(
+            self.raw_data_dir, "data.csv"
+        )  # Full path to the raw data file
+        self.train_data_path = os.path.join("artifacts", "train.csv")
+        self.val_data_path = os.path.join(
+            "artifacts", "val.csv"
+        )  # Path for validation data
+        self.test_data_path = os.path.join("artifacts", "test.csv")
 
 
-@dataclass
 class DataIngestion:
-    ingestion_config: DataIngestionConfig = DataIngestionConfig()
+    def __init__(self, ingestion_config=None):
+        self.ingestion_config = ingestion_config or DataIngestionConfig()
 
     def initiate_data_ingestion(self):
         logging.info("Data Ingestion started")
@@ -46,13 +53,21 @@ class DataIngestion:
 
             # Further split the training set into training and validation sets
             logging.info("Train-validation split initiated")
-            train_set, val_set = train_test_split(train_set, test_size=0.2, random_state=42)
+            train_set, val_set = train_test_split(
+                train_set, test_size=0.2, random_state=42
+            )
             logging.info("Train-validation split completed")
 
             # Save the training, validation, and testing sets to CSV files
-            train_set.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
-            val_set.to_csv(self.ingestion_config.val_data_path, index=False, header=True)
-            test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
+            train_set.to_csv(
+                self.ingestion_config.train_data_path, index=False, header=True
+            )
+            val_set.to_csv(
+                self.ingestion_config.val_data_path, index=False, header=True
+            )
+            test_set.to_csv(
+                self.ingestion_config.test_data_path, index=False, header=True
+            )
             logging.info("Train, validation, and test data saved to CSV files")
 
             return (
@@ -72,7 +87,9 @@ if __name__ == "__main__":
     logging.info("Data Ingestion completed")
 
     data_transformation = DataTransformation()
-    train_arr, val_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_data, val_data, test_data)
+    train_arr, val_arr, test_arr, _ = data_transformation.initiate_data_transformation(
+        train_data, val_data, test_data
+    )
     logging.info("Data Transformation completed")
 
     model_trainer = ModelTrainer()
