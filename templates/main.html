@@ -25,34 +25,45 @@
         }
 
         .container {
-            margin-top: 50px;
-            max-width: 600px;
+            margin-top: 30px;
+            max-width: 500px;
+            /* Reduced width */
             background: #ffffff;
-            padding: 30px;
+            padding: 20px;
+            /* Reduced padding */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            /* Reduced margin */
+            font-size: 1.5rem;
+            /* Reduced font size */
             color: #343a40;
         }
 
         .form-label {
             font-weight: bold;
+            font-size: 0.9rem;
+            /* Reduced font size */
         }
 
         .btn-primary {
             width: 100%;
-            padding: 10px;
-            font-size: 1.2rem;
+            padding: 8px;
+            /* Reduced padding */
+            font-size: 1rem;
+            /* Reduced font size */
         }
 
         .result {
             text-align: center;
-            margin-top: 20px;
-            font-size: 1.5rem;
+            margin-top: 15px;
+            /* Reduced margin */
+            font-size: 1.2rem;
+            /* Reduced font size */
             color: #28a745;
         }
     </style>
@@ -86,6 +97,11 @@
     <!-- Main Content -->
     <div class="container">
         <h1>Student Exam Performance Prediction</h1>
+        {% if results is not none %}
+        <div class="result">
+            <p>The predicted Math Score is: <strong>{{ results }}</strong></p>
+        </div>
+        {% endif %}
         <form action="{{ url_for('predict_datapoint') }}" method="post">
             <!-- Gender -->
             <div class="mb-3">
@@ -163,12 +179,6 @@
                 <input class="btn btn-primary" type="submit" value="Predict your Math Score" />
             </div>
         </form>
-
-        {% if results is not none %}
-        <div class="result">
-            <p>The predicted Math Score is: <strong>{{ results }}</strong></p>
-        </div>
-        {% endif %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
