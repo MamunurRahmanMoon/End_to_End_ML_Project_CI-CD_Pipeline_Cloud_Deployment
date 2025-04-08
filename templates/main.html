@@ -99,7 +99,7 @@
         <h1>Student Exam Performance Prediction</h1>
         {% if results is not none %}
         <div class="result">
-            <p>The predicted Math Score is: <strong>{{ results }}</strong></p>
+            <p>The predicted Math Score is: <strong>{{ "%.2f"|format(results|float) }}</strong></p>
         </div>
         {% endif %}
         <form action="{{ url_for('predict_datapoint') }}" method="post">
