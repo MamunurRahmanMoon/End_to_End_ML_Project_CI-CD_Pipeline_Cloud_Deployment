@@ -15,7 +15,7 @@ This repository demonstrates an **End-to-End Machine Learning Project** with a f
   ✅ Automated deployment to a cloud environment.
 
 - **Cloud Deployment**:  
-  ✅ Deploys the ML application to **AWS Elastic Beanstalk** or **ECS**.  
+  ✅ Deploys the ML application to **AWS ECR + EC2 Instance**.  
   ✅ Scalable and production-ready infrastructure.
 
 ---
